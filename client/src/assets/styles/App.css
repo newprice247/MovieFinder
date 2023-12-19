@@ -5,3 +5,10 @@
   text-align: center;
 }
 
+body {
+  background-image: url(/images/streaming.jpg);
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-size: cover;
+  width: 100%;
+}
