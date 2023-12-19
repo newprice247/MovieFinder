@@ -28,6 +28,7 @@
   "homepage": "https://github.com/newprice247/MovieFinderReact#readme",
   "dependencies": {
     "axios": "^1.6.2",
+    "dotenv": "^16.3.1",
     "uuid": "^9.0.1"
   }
 }
