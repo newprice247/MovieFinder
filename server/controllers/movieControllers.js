@@ -1,5 +1,7 @@
-const axios = require('axios');
+
+
 require('dotenv').config();
+const axios = require('axios');
 const watchmodeKey = process.env.WATCHMODE_KEY;
 
 function movieAPI(title) {
@@ -10,7 +12,8 @@ module.exports = {
     async getMoviesByTitle(req, res) {
         try {
             const response = await axios.get(movieAPI(req.params.title));
-            res.send(response.data);
+            console.log(response.data);
+            res.json(response.data);
         } catch (error) {
             console.log(error);
         }
