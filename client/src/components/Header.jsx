@@ -1,245 +1,77 @@
-import React from "react";
-import {
-  Navbar,
-  Collapse,
-  Typography,
-  Button,
-  IconButton,
-  List,
-  ListItem,
-  Menu,
-  MenuHandler,
-  MenuList,
-  MenuItem,
-} from "@material-tailwind/react";
-import {
-  ChevronDownIcon,
-  Bars3Icon,
-  XMarkIcon,
-} from "@heroicons/react/24/outline";
-import {
-  Bars4Icon,
-  GlobeAmericasIcon,
-  NewspaperIcon,
-  PhoneIcon,
-  RectangleGroupIcon,
-  SquaresPlusIcon,
-  SunIcon,
-  TagIcon,
-  UserGroupIcon,
-} from "@heroicons/react/24/solid";
- 
-const navListMenuItems = [
-  {
-    title: "Products",
-    description: "Find the perfect solution for your needs.",
-    icon: SquaresPlusIcon,
-  },
-  {
-    title: "About Us",
-    description: "Meet and learn about our dedication",
-    icon: UserGroupIcon,
-  },
-  {
-    title: "Blog",
-    description: "Find the perfect solution for your needs.",
-    icon: Bars4Icon,
-  },
-  {
-    title: "Services",
-    description: "Learn how we can help you achieve your goals.",
-    icon: SunIcon,
-  },
-  {
-    title: "Support",
-    description: "Reach out to us for assistance or inquiries",
-    icon: GlobeAmericasIcon,
-  },
-  {
-    title: "Contact",
-    description: "Find the perfect solution for your needs.",
-    icon: PhoneIcon,
-  },
-  {
-    title: "News",
-    description: "Read insightful articles, tips, and expert opinions.",
-    icon: NewspaperIcon,
-  },
-  {
-    title: "Products",
-    description: "Find the perfect solution for your needs.",
-    icon: RectangleGroupIcon,
-  },
-  {
-    title: "Special Offers",
-    description: "Explore limited-time deals and bundles",
-    icon: TagIcon,
-  },
-];
- 
-function NavListMenu() {
-  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
-  const renderItems = navListMenuItems.map(
-    ({ icon, title, description }, key) => (
-      <a href="#" key={key}>
-        <MenuItem className="flex items-center gap-3 rounded-lg">
-          <div className="flex items-center justify-center rounded-lg !bg-blue-gray-50 p-2 ">
-            {" "}
-            {React.createElement(icon, {
-              strokeWidth: 2,
-              className: "h-6 text-gray-900 w-6",
-            })}
-          </div>
-          <div>
-            <Typography
-              variant="h6"
-              color="blue-gray"
-              className="flex items-center text-sm font-bold"
-            >
-              {title}
-            </Typography>
-            <Typography
-              variant="paragraph"
-              className="text-xs !font-medium text-blue-gray-500"
-            >
-              {description}
-            </Typography>
-          </div>
-        </MenuItem>
-      </a>
-    ),
-  );
- 
+import React, { useState } from 'react'
+import { DarkModeSwitch } from 'react-toggle-dark-mode';
+import useDarkSide from '../hooks/useDarkSide.jsx';
+
+
+export default function Header() {
+    const [colorTheme, setColorTheme] = useDarkSide()
+    const [darkMode, setDarkMode] = useState(colorTheme === 'dark' ? true : false)
+
+    const toggleDarkMode = (checked) => {
+        setDarkMode(checked)
+        setColorTheme(checked ? 'dark' : 'light')
+    }
+
   return (
-    <React.Fragment>
-      <Menu
-        open={isMenuOpen}
-        handler={setIsMenuOpen}
-        offset={{ mainAxis: 20 }}
-        placement="bottom"
-        allowHover={true}
-      >
-        <MenuHandler>
-          <Typography as="div" variant="small" className="font-medium">
-            <ListItem
-              className="flex items-center gap-2 py-2 pr-4 font-medium text-gray-900"
-              selected={isMenuOpen || isMobileMenuOpen}
-              onClick={() => setIsMobileMenuOpen((cur) => !cur)}
-            >
-              Resources
-              <ChevronDownIcon
-                strokeWidth={2.5}
-                className={`hidden h-3 w-3 transition-transform lg:block ${
-                  isMenuOpen ? "rotate-180" : ""
-                }`}
-              />
-              <ChevronDownIcon
-                strokeWidth={2.5}
-                className={`block h-3 w-3 transition-transform lg:hidden ${
-                  isMobileMenuOpen ? "rotate-180" : ""
-                }`}
-              />
-            </ListItem>
-          </Typography>
-        </MenuHandler>
-        <MenuList className="hidden max-w-screen-xl rounded-xl lg:block">
-          <ul className="grid grid-cols-3 gap-y-2 outline-none outline-0">
-            {renderItems}
-          </ul>
-        </MenuList>
-      </Menu>
-      <div className="block lg:hidden">
-        <Collapse open={isMobileMenuOpen}>{renderItems}</Collapse>
-      </div>
-    </React.Fragment>
-  );
-}
- 
-function NavList() {
-  return (
-    <List className="mt-4 mb-6 p-0 lg:mt-0 lg:mb-0 lg:flex-row lg:p-1">
-      <Typography
-        as="a"
-        href="#"
-        variant="small"
-        color="blue-gray"
-        className="font-medium"
-      >
-        <ListItem className="flex items-center gap-2 py-2 pr-4">Home</ListItem>
-      </Typography>
-      <NavListMenu />
-      <Typography
-        as="a"
-        href="#"
-        variant="small"
-        color="blue-gray"
-        className="font-medium"
-      >
-        <ListItem className="flex items-center gap-2 py-2 pr-4">
-          Contact Us
-        </ListItem>
-      </Typography>
-    </List>
-  );
-}
- 
-export default function NavbarWithMegaMenu() {
-  const [openNav, setOpenNav] = React.useState(false);
- 
-  React.useEffect(() => {
-    window.addEventListener(
-      "resize",
-      () => window.innerWidth >= 960 && setOpenNav(false),
-    );
-  }, []);
- 
-  return (
-    <Navbar className="mx-auto max-w-screen-xl px-4 py-2">
-      <div className="flex items-center justify-between text-blue-gray-900">
-        <Typography
-          as="a"
-          href="#"
-          variant="h6"
-          className="mr-4 cursor-pointer py-1.5 lg:ml-2"
+    <div className="fixed z-50 w-full h-16 max-w-lg -translate-x-1/2 bg-white border border-gray-200 rounded-full bottom-4 left-1/2 dark:bg-gray-700 dark:border-gray-600">
+      <div className="grid h-full max-w-lg grid-cols-5 mx-auto">
+        <button data-tooltip-target="tooltip-home" type="button" className="inline-flex flex-col items-center justify-center px-5 rounded-s-full hover:bg-gray-50 dark:hover:bg-gray-800 group">
+          <svg className="w-5 h-5 mb-1 text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+            <path d="m19.707 9.293-2-2-7-7a1 1 0 0 0-1.414 0l-7 7-2 2a1 1 0 0 0 1.414 1.414L2 10.414V18a2 2 0 0 0 2 2h3a1 1 0 0 0 1-1v-4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v4a1 1 0 0 0 1 1h3a2 2 0 0 0 2-2v-7.586l.293.293a1 1 0 0 0 1.414-1.414Z" />
+          </svg>
+          <span className="sr-only">Home</span>
+        </button>
+        <div id="tooltip-home" role="tooltip" className="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+          Home
+          <div className="tooltip-arrow" data-popper-arrow></div>
+        </div>
+        <button data-tooltip-target="tooltip-wallet" type="button" className="inline-flex flex-col items-center justify-center px-5 hover:bg-gray-50 dark:hover:bg-gray-800 group">
+          <svg className="w-5 h-5 mb-1 text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M11.074 4 8.442.408A.95.95 0 0 0 7.014.254L2.926 4h8.148ZM9 13v-1a4 4 0 0 1 4-4h6V6a1 1 0 0 0-1-1H1a1 1 0 0 0-1 1v13a1 1 0 0 0 1 1h17a1 1 0 0 0 1-1v-2h-6a4 4 0 0 1-4-4Z" />
+            <path d="M19 10h-6a2 2 0 0 0-2 2v1a2 2 0 0 0 2 2h6a1 1 0 0 0 1-1v-3a1 1 0 0 0-1-1Zm-4.5 3.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2ZM12.62 4h2.78L12.539.41a1.086 1.086 0 1 0-1.7 1.352L12.62 4Z" />
+          </svg>
+          <span className="sr-only">Wallet</span>
+        </button>
+        <div id="tooltip-wallet" role="tooltip" className="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+          Wallet
+          <div className="tooltip-arrow" data-popper-arrow></div>
+        </div>
+        <button 
+        data-tooltip-target="tooltip-notifications" 
+        type="button" 
+        className="inline-flex flex-col items-center justify-center px-5 hover:bg-gray-50 dark:hover:bg-gray-800 group"
+        onClick={() => toggleDarkMode(!darkMode)}
         >
-          Movie Finder
-        </Typography>
-        <div className="hidden lg:block">
-          <NavList />
+          <DarkModeSwitch
+            checked={darkMode}
+            onChange={toggleDarkMode}
+            size={20}
+            className="w-5 h-5 mb-1 text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500"
+          />
+          <span className="sr-only">Toggle Dark Mode</span>
+        </button>
+        <button data-tooltip-target="tooltip-settings" type="button" className="inline-flex flex-col items-center justify-center px-5 hover:bg-gray-50 dark:hover:bg-gray-800 group">
+          <svg className="w-5 h-5 mb-1 text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 12.25V1m0 11.25a2.25 2.25 0 0 0 0 4.5m0-4.5a2.25 2.25 0 0 1 0 4.5M4 19v-2.25m6-13.5V1m0 2.25a2.25 2.25 0 0 0 0 4.5m0-4.5a2.25 2.25 0 0 1 0 4.5M10 19V7.75m6 4.5V1m0 11.25a2.25 2.25 0 1 0 0 4.5 2.25 2.25 0 0 0 0-4.5ZM16 19v-2" />
+          </svg>
+          <span className="sr-only">Settings</span>
+        </button>
+        <div id="tooltip-settings" role="tooltip" className="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+          Settings
+          <div className="tooltip-arrow" data-popper-arrow></div>
         </div>
-        <div className="hidden gap-2 lg:flex">
-          <Button variant="text" size="sm" color="blue-gray">
-            Log In
-          </Button>
-          <Button variant="gradient" size="sm">
-            Sign In
-          </Button>
+        <button data-tooltip-target="tooltip-profile" type="button" className="inline-flex flex-col items-center justify-center px-5 rounded-e-full hover:bg-gray-50 dark:hover:bg-gray-800 group">
+          <svg className="w-5 h-5 mb-1 text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M10 0a10 10 0 1 0 10 10A10.011 10.011 0 0 0 10 0Zm0 5a3 3 0 1 1 0 6 3 3 0 0 1 0-6Zm0 13a8.949 8.949 0 0 1-4.951-1.488A3.987 3.987 0 0 1 9 13h2a3.987 3.987 0 0 1 3.951 3.512A8.949 8.949 0 0 1 10 18Z" />
+          </svg>
+          <span className="sr-only">Profile</span>
+        </button>
+        <div id="tooltip-profile" role="tooltip" className="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+          Profile
+          <div className="tooltip-arrow" data-popper-arrow></div>
         </div>
-        <IconButton
-          variant="text"
-          color="blue-gray"
-          className="lg:hidden"
-          onClick={() => setOpenNav(!openNav)}
-        >
-          {openNav ? (
-            <XMarkIcon className="h-6 w-6" strokeWidth={2} />
-          ) : (
-            <Bars3Icon className="h-6 w-6" strokeWidth={2} />
-          )}
-        </IconButton>
       </div>
-      <Collapse open={openNav}>
-        <NavList />
-        <div className="flex w-full flex-nowrap items-center gap-2 lg:hidden">
-          <Button variant="outlined" size="sm" color="blue-gray" fullWidth>
-            Log In
-          </Button>
-          <Button variant="gradient" size="sm" fullWidth>
-            Sign In
-          </Button>
-        </div>
-      </Collapse>
-    </Navbar>
-  );
+    </div>
+
+  )
 }
