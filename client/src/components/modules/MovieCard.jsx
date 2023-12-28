@@ -37,7 +37,7 @@ export default function AccordionCustomIcon(props) {
         onClick={props.onClick}
         >
           <img src={props.image_url} alt={props.name} className="lg:h-40 h-24 rounded-lg" />
-          <p className="text-center font-medium">{props.name}</p>
+          <p className="text-center font-medium">{props.name}({props.year})({props.media})</p>
         </AccordionHeader>
         <AccordionBody
         className="dark:text-myColor-3 text-lg leading-relaxed px-6 pb-6 flex flex-row justify-between dark:bg-myColor-1 dark:hover:text-myColor-1 transition-colors duration-150 bg-gray-300 "
@@ -46,9 +46,12 @@ export default function AccordionCustomIcon(props) {
           <div
             className="dark:text-myColor-3 text-lg leading-relaxed px-6 pb-6 flex flex-col items-center justify-center text-black"
           >
-            <p className="text-md lg:text-lg font-medium">Description:</p>
-          Release Date: {props.year}<br />
+          <p className="text-md lg:text-lg font-medium">
+          Release Date: {props.year}</p>
+          <p className="text-md lg:text-lg font-medium">Description:{props.overview}</p>
+          <p className="text-md lg:text-lg font-medium">Media Type: {props.media}</p>
           </div>
+
           
         </AccordionBody>
       </Accordion>

@@ -17,6 +17,7 @@ const search = {
     getMoviesTest: async () => {
         try {
             const movies = await axios.get('/api/test');
+            console.log(movies.data);
             return movies.data
     } catch (error) {
         console.log(error);

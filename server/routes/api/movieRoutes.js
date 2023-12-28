@@ -3,9 +3,9 @@
 const express = require("express");
 const router = express.Router()
 const {
-    getMoviesByTitle
+    searchTMDB
 } = require('../../controllers/movieControllers')
 
-router.get('/:title', getMoviesByTitle)
+router.get('/:title', searchTMDB)
 
 module.exports = router;

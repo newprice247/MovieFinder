@@ -9,7 +9,7 @@ export default function CarouselWithContent({
     const [searchTerm, setSearchTerm] = useState('')
     const [searchResults, setSearchResults] = useState(null)
     const [open, setOpen] = React.useState("")
-        
+
 
     const handleOpen = (value) => {
         setOpen(open === value ? 0 : value);
@@ -17,26 +17,31 @@ export default function CarouselWithContent({
 
 
 
-    // const getSearchResults = async () => {
-    //     try {
-    //         const response = await search.getMovieByTitle(searchTerm)
-    //         console.log(response.results)
-    //         setSearchResults(response.results)
-
-    //     } catch (error) {
-    //         console.log(error)
-    //     }
-    // }
-    const getTestingMovies = async () => {
+    const getSearchResults = async () => {
         try {
-            const response = await search.getMoviesTest()
-            console.log(response)
-            setSearchResults(response)
-        }
-        catch (error) {
+            const finalSearchResults = []
+            const response = await search.getMovieByTitle(searchTerm)
+            console.log(response.results)
+            for (let i = 0; i < response.results.length; i++) {
+                if (response.results[i].media_type !== "person") {
+                    finalSearchResults.push(response.results[i])
+                }
+            }
+            setSearchResults(finalSearchResults)
+        } catch (error) {
             console.log(error)
         }
     }
+    // const getTestingMovies = async () => {
+    //     try {
+    //         const response = await search.getMoviesTest()
+    //         console.log(response)
+    //         setSearchResults(response)
+    //     }
+    //     catch (error) {
+    //         console.log(error)
+    //     }
+    // }
 
     return (
         <>
@@ -55,8 +60,8 @@ export default function CarouselWithContent({
                             console.log("Search button clicked")
 
                             setSearchTerm(searchTerm)
-                            // getSearchResults()
-                            getTestingMovies()
+                            getSearchResults()
+                            // getTestingMovies()
 
                         }}
                     >
@@ -98,8 +103,8 @@ export default function CarouselWithContent({
                                             console.log("Search button clicked")
 
                                             setSearchTerm(searchTerm)
-                                            // getSearchResults()
-                                            getTestingMovies()
+                                            getSearchResults()
+                                            // getTestingMovies()
 
                                         }}
                                     >
@@ -114,14 +119,16 @@ export default function CarouselWithContent({
                 <div className="flex flex-wrap justify-center gap-4">
                     {searchResults.map((movie) => (
                         <MovieCard
-                            key={movie._id}
-                            id={movie._id}
-                            name={movie.name}
-                            year={movie.year}
-                            image_url={movie.image_url}
-                            open={open === movie._id}
+                            key={movie.id}
+                            id={movie.id}
+                            name={movie.title ? movie.title : movie.name}
+                            year={movie.release_date ? movie.release_date : movie.first_air_date}
+                            image_url={movie.poster_path ? `https://image.tmdb.org/t/p/w500${movie.poster_path}` : "https://via.placeholder.com/500x750"}
+                            overview={movie.overview}
+                            media={movie.media_type}
+                            open={open === movie.id}
                             openUseState={open}
-                            onClick={() => handleOpen(movie._id)}
+                            onClick={() => handleOpen(movie.id)}
                         />
                     ))}
                 </div>
