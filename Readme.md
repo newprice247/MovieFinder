@@ -4,4 +4,4 @@ The goal of this project is to recreate the movie finder app that our group buil
 
 ## Deployed Site:
 
-[Movie Finder 2 - The Sequel](https://moviefinder2-thesequel.netlify.app)
+[Movie Finder 2 - The Sequel](https://moviefinder-no60.onrender.com/)
