@@ -13,7 +13,7 @@
 // },
 
 const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
+const { Schema, model } = mongoose;
 
 const movieSchema = new Schema({
     name: { type: String, required: true },
@@ -27,10 +27,15 @@ const movieSchema = new Schema({
     tmdb_type: { type: String, required: true },
     image_url: { type: String, required: true }
 },
-    { timestamps: true },
+    {
+        toJSON: {
+            virtuals: true,
+        },
+        id: false
+    }
 );
 
-const Movie = mongoose.model("Movie", movieSchema);
+const Movie = model("movie", movieSchema);
 
 module.exports = Movie;
 
