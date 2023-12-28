@@ -47,13 +47,23 @@ export default function CarouselWithContent() {
     const [searchTerm, setSearchTerm] = useState('')
     const [searchResults, setSearchResults] = useState(null)
 
-    const getSearchResults = async () => {
-        try {
-            const response = await search.getMovieByTitle(searchTerm)
-            console.log(response.results)
-            setSearchResults(response.results)
+    // const getSearchResults = async () => {
+    //     try {
+    //         const response = await search.getMovieByTitle(searchTerm)
+    //         console.log(response.results)
+    //         setSearchResults(response.results)
 
-        } catch (error) {
+    //     } catch (error) {
+    //         console.log(error)
+    //     }
+    // }
+    const getTestingMovies = async () => {
+        try {
+            const response = await search.getMoviesTest()
+            console.log(response)
+            setSearchResults(response)
+        }
+        catch (error) {
             console.log(error)
         }
     }
@@ -93,7 +103,8 @@ export default function CarouselWithContent() {
                                         console.log("Search button clicked")
                                         
                                         setSearchTerm(searchTerm)
-                                        getSearchResults()
+                                        // getSearchResults()
+                                        getTestingMovies()
                                         
                                     }}
                                 >
@@ -111,7 +122,7 @@ export default function CarouselWithContent() {
                             key={movie.results}
                             title={movie.name}
                             releaseDate={movie.year}
-                            image={movie.image_url.replace(/&quot;/g, '')}
+                            image={movie.image_url}
                         />
                     ))}
                 </div>

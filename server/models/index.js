@@ -1,5 +1,3 @@
-const User = require('./User.js');
-const Listing = require('./Listing.js');
-const Category = require('./Category.js');
+const Movie = require('./Movie.js');
 
-module.exports = { User, Listing, Category };
+module.exports = { Movie };
