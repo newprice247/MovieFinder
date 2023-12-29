@@ -6,6 +6,6 @@ const {
     searchTMDB
 } = require('../../controllers/movieControllers')
 
-router.get('/:title', searchTMDB)
+router.get('/:title/:page', searchTMDB)
 
 module.exports = router;

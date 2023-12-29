@@ -12,14 +12,14 @@ module.exports = {
         const options = {
             method: 'GET',
             url: 'https://api.themoviedb.org/3/search/multi',
-            params: {query: req.params.title, include_adult: 'false', language: 'en-US', page: '1'},
+            params: {query: req.params.title, include_adult: 'false', language: 'en-US', page: req.params.page},
             headers: {
               accept: 'application/json',
               Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI2ZmM2NDZhNDk3ZDZhZTJiZjJkNGVmYmI5OWRhZGZmNiIsInN1YiI6IjY0ZDZlNzkxMDAxYmJkMDBhZGQyNTA3NyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.Ezuo68vrQBKvdon2ZM21TIRxbUfqc3YIFu3Im__67gU'
             }
           };
           
-          axios
+          await axios
             .request(options)
             .then(function (response) {
               console.log(response.data);

@@ -12,16 +12,20 @@ export default function CarouselWithContent() {
     const [totalPages, setTotalPages] = useState(0)
     const [active, setActive] = React.useState(1);
 
-    const next = () => {
+    const next = async () => {
         if (active === totalPages) return;
 
         setActive(active + 1);
+        await getSearchResults()
+        scrollToTop()
     };
 
-    const prev = () => {
+    const prev = async () => {
         if (active === 1) return;
 
         setActive(active - 1);
+        await getSearchResults()
+        scrollToTop()
     };
 
 
@@ -41,9 +45,9 @@ export default function CarouselWithContent() {
     const getSearchResults = async () => {
         try {
             const finalSearchResults = []
-            const response = await search.getMovieByTitle(searchTerm)
+            const response = await search.getMovieByTitle(searchTerm, active)
             setTotalPages(response.total_pages)
-            for (let i = 0; i < response.results.length; i++) {
+            for (let i = 0; i < response.results.length; i++){
                 if (response.results[i].media_type !== "person") {
                     finalSearchResults.push(response.results[i])
                 }
@@ -97,6 +101,7 @@ export default function CarouselWithContent() {
                         onKeyDown={(event) => {
                             if (event.key === "Enter") {
                                 setSearchTerm(searchTerm)
+                                setActive(1)
                                 getSearchResults()
                                 scrollToTop()
                                 // getTestingMovies()
@@ -117,6 +122,7 @@ export default function CarouselWithContent() {
                                 console.log("Search button clicked")
                                 setSearchTerm(searchTerm)
                                 getSearchResults()
+                                setActive(1)
                                 // getTestingMovies()
                                 scrollToTop()
 
@@ -156,6 +162,7 @@ export default function CarouselWithContent() {
                                         }}
                                         onKeyDown={(event) => {
                                             if (event.key === "Enter") {
+                                                setActive(1)
                                                 setSearchTerm(searchTerm)
                                                 getSearchResults()
                                                 // getTestingMovies()
@@ -165,6 +172,7 @@ export default function CarouselWithContent() {
                                     <Button
                                         className="py-2 px-10 rounded-lg bg-blue-500 text-white font-semibold hover:bg-blue-700 hover:text-white shadow-md hover:shadow-lg transition duration-500 ease-in-out my-6"
                                         onClick={() => {
+                                            setActive(1)
                                             setSearchTerm(searchTerm)
                                             getSearchResults()
                                             // getTestingMovies()

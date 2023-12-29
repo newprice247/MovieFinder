@@ -4,9 +4,9 @@ import axios from 'axios';
 
 const search = {
     
-     getMovieByTitle: async (title) => {
+     getMovieByTitle: async (title, page) => {
         try {
-            const response = await axios.get(`/api/movies/${title}`);
+            const response = await axios.get(`/api/movies/${title}/${page}`);
             return response.data;
         } catch (error) {
             console.log(error);
