@@ -1,32 +1,40 @@
 import React, { useState, useEffect } from "react";
 import MovieCard from "../components/modules/MovieCard";
-import Pagination from "../components/Pagination";
+import { Spinner } from "@material-tailwind/react";
+import Pagination from "../components/modules/Pagination";
 import search from "../../utils/API";
+import { Checkbox } from "@material-tailwind/react";
+import SearchBar from "../components/modules/SearchBar";
 
 import { Carousel, Typography, Button, Icon } from "@material-tailwind/react";
 
 export default function CarouselWithContent() {
     const [searchTerm, setSearchTerm] = useState('')
     const [searchResults, setSearchResults] = useState(null)
+    let [filteredResults, setFilteredResults] = useState([])
     const [open, setOpen] = React.useState("")
-    const [totalPages, setTotalPages] = useState(0)
-    const [active, setActive] = React.useState(1);
+    // const [totalPages, setTotalPages] = useState(0)
+    // const [active, setActive] = React.useState(1);
+    const [movieFilter, setMovieFilter] = useState(true)
+    const [tvFilter, setTvFilter] = useState(true)
+    const [loading, setLoading] = useState(false);
 
-    const next = async () => {
-        if (active === totalPages) return;
 
-        setActive(active + 1);
-        await getSearchResults()
-        scrollToTop()
-    };
+    // const next = async () => {
+    //     if (active === totalPages) return;
 
-    const prev = async () => {
-        if (active === 1) return;
+    //     setActive(active + 1);
+    //     await getSearchResults(active + 1);
+    //     scrollToTop();
+    // };
 
-        setActive(active - 1);
-        await getSearchResults()
-        scrollToTop()
-    };
+    // const prev = async () => {
+    //     if (active === 1) return;
+
+    //     setActive(active - 1);
+    //     await getSearchResults(active - 1);
+    //     scrollToTop();
+    // };
 
 
 
@@ -41,100 +49,87 @@ export default function CarouselWithContent() {
         });
     }
 
+    const handleSearchOnClick = () => {
+        setSearchTerm(searchTerm)
+        setSearchResults(null)
+        setLoading(true)
+        // setActive(1)
+        getSearchResults(1)
+        scrollToTop()
+    }
 
-    const getSearchResults = async () => {
+
+
+    const getSearchResults = async (number) => {
+        setLoading(true)
+        setFilteredResults(null)
+        let finalSearchResults = []
         try {
-            const finalSearchResults = []
-            const response = await search.getMovieByTitle(searchTerm, active)
-            setTotalPages(response.total_pages)
-            for (let i = 0; i < response.results.length; i++){
-                if (response.results[i].media_type !== "person") {
-                    finalSearchResults.push(response.results[i])
+            const response = await search.getMovieByTitle(searchTerm, number)
+            // setTotalPages(response.total_pages)
+            for (let i = 0; i < response.length; i++) {
+                if (response[i].media_type !== "person") {
+                    finalSearchResults.push(response[i])
                 }
             }
-            for (let i = 0; i < finalSearchResults.length; i++) {
-                if (finalSearchResults[i].media_type === "tv") {
-                    finalSearchResults[i].media_type = "TV Show"
+            finalSearchResults.map((movie) => {
+                if (movie.media_type === "movie") {
+                    movie.media_type = "Movie"
                 }
-                if (finalSearchResults[i].media_type === "movie") {
-                    finalSearchResults[i].media_type = "Movie"
+                if (movie.media_type === "tv") {
+                    movie.media_type = "TV Show"
                 }
-            }
-            for (let i = 0; i < finalSearchResults.length; i++) {
-                if (finalSearchResults[i].release_date) {
-                    finalSearchResults[i].release_date = new Date(finalSearchResults[i].release_date).getFullYear()
+            })
+            finalSearchResults.map((movie) => {
+                if (movie.release_date) {
+                    movie.release_date = movie.release_date.substring(0, 4)
                 }
-                if (finalSearchResults[i].first_air_date) {
-                    finalSearchResults[i].first_air_date = new Date(finalSearchResults[i].first_air_date).getFullYear()
+                if (movie.first_air_date) {
+                    movie.first_air_date = movie.first_air_date.substring(0, 4)
                 }
-            }
+            })
+            finalSearchResults.sort((a, b) => (a.vote_count < b.vote_count) ? 1 : -1)
             setSearchResults(finalSearchResults)
+            finalSearchResults.filter((movie) => {
+                if (movieFilter === true && tvFilter === true) {
+                    setFilteredResults(finalSearchResults)
+                } else if (movieFilter === true && tvFilter === false) {
+                    setFilteredResults(finalSearchResults.filter((movie) => movie.media_type !== "TV Show"))
+                } else if (movieFilter === false && tvFilter === true) {
+                    setFilteredResults(finalSearchResults.filter((movie) => movie.media_type !== "Movie"))
+                } else {
+                    setFilteredResults(null)
+                }
+            })
         } catch (error) {
             console.log(error)
+        } finally {
+            setLoading(false)
         }
     }
-    // const getTestingMovies = async () => {
-    //     try {
-    //         const response = await search.getMoviesTest()
-    //         console.log(response)
-    //         setSearchResults(response)
-    //     }
-    //     catch (error) {
-    //         console.log(error)
-    //     }
-    // }
+
+
+    useEffect(() => {
+        if (searchResults) {
+            if (movieFilter === true && tvFilter === true) {
+                setFilteredResults(searchResults)
+            } else if (movieFilter === true && tvFilter === false) {
+                setFilteredResults(searchResults.filter((movie) => movie.media_type !== "TV Show"))
+            } else if (movieFilter === false && tvFilter === true) {
+                setFilteredResults(searchResults.filter((movie) => movie.media_type !== "Movie"))
+            } else {
+                setFilteredResults(null)
+            }
+        }
+    }
+        , [movieFilter, tvFilter])
+
 
     return (
         <div
             className="flex flex-col items-center justify-center w-full h-full text-center"
         >
-            {searchResults ? (
-                <div className="pt-2 mx-full text-gray-600 dark:text-white fixed top-0 z-50 w-[90%] md:w-[80%] lg:w-[70%] xl:w-[60%] 2xl:w-[50%]">
-                    <input className="border-2 border-gray-300 bg-white h-10 px-5 pr-16 rounded-lg text-sm focus:outline-none w-full dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                        type="search"
-                        name="search"
-                        placeholder="Search"
-                        onChange={(event) => {
-                            console.log(event.target.value)
-                            setSearchTerm(event.target.value)
-                        }}
-                        onKeyDown={(event) => {
-                            if (event.key === "Enter") {
-                                setSearchTerm(searchTerm)
-                                setActive(1)
-                                getSearchResults()
-                                scrollToTop()
-                                // getTestingMovies()
-                            }
-                        }}
-                    />
-                    <div className="flex flex-row justify-center gap-4">
-                        
-                        <Pagination
-                            active={active}
-                            totalPages={totalPages}
-                            prev={prev}
-                            next={next}
-                        />
-                        <Button
-                            className="py-2 px-10 rounded-lg bg-blue-500 text-white font-semibold hover:bg-blue-700 hover:text-white shadow-md hover:shadow-lg transition duration-500 ease-in-out my-4 "
-                            onClick={() => {
-                                console.log("Search button clicked")
-                                setSearchTerm(searchTerm)
-                                getSearchResults()
-                                setActive(1)
-                                // getTestingMovies()
-                                scrollToTop()
-
-                            }}
-                        >
-                            Search
-                        </Button>
-                    </div>
-
-                </div>
-            ) : (
-
+            {!loading && !searchResults && (
                 <Carousel className="rounded-xl">
                     <div className="relative h-[75vh] lg:h-[100vh] w-full rounded-lg">
                         <div className="absolute inset-0 bg-black/50 rounded-xl" />
@@ -162,9 +157,9 @@ export default function CarouselWithContent() {
                                         }}
                                         onKeyDown={(event) => {
                                             if (event.key === "Enter") {
-                                                setActive(1)
                                                 setSearchTerm(searchTerm)
-                                                getSearchResults()
+                                                // setActive(1)
+                                                getSearchResults(1)
                                                 // getTestingMovies()
                                             }
                                         }}
@@ -172,9 +167,9 @@ export default function CarouselWithContent() {
                                     <Button
                                         className="py-2 px-10 rounded-lg bg-blue-500 text-white font-semibold hover:bg-blue-700 hover:text-white shadow-md hover:shadow-lg transition duration-500 ease-in-out my-6"
                                         onClick={() => {
-                                            setActive(1)
                                             setSearchTerm(searchTerm)
-                                            getSearchResults()
+                                            // setActive(1)
+                                            getSearchResults(1)
                                             // getTestingMovies()
                                         }}
                                     >
@@ -184,26 +179,92 @@ export default function CarouselWithContent() {
                             </div>
                         </div>
                     </div>
-                </Carousel>)}
-            {searchResults && (
-                <div className="flex flex-wrap justify-center gap-4 mt-20">
+                </Carousel>)
+            }
+            {!loading && filteredResults.length !== 0 && searchResults && (
+                <>
+                    <SearchBar
+                        onChange={(event) => {
+                            setSearchTerm(event.target.value)
+                        }}
+                        onKeyDown={(event) => {
+                            if (event.key === "Enter") {
+                                handleSearchOnClick()
+                            }
+                        }}
+                        movieOnClick={() => {
+                            if (movieFilter === true) {
+                                setMovieFilter(false)
+                            } else {
+                                setMovieFilter(true)
+                            }
+                        }}
+                        tvOnClick={() => {
+                            if (tvFilter === true) {
+                                setTvFilter(false)
+                            } else {
+                                setTvFilter(true)
+                            }
+                        }}
+                        // active={active}
+                        // totalPages={totalPages}
+                        // prev={prev}
+                        // next={next}
+                        buttonOnClick={() => {
+                            handleSearchOnClick()
+                        }}
+                    />
+                    
+                    <div className="flex flex-wrap justify-center gap-4 mt-40">
+                        
+                        {filteredResults.map((movie) => (
 
-                    {searchResults.map((movie) => (
-                        <MovieCard
-                            key={movie.id}
-                            id={movie.id}
-                            name={movie.title ? movie.title : movie.name}
-                            year={movie.release_date ? movie.release_date : movie.first_air_date}
-                            image_url={movie.poster_path ? `https://image.tmdb.org/t/p/w500${movie.poster_path}` : "https://via.placeholder.com/500x750"}
-                            overview={movie.overview}
-                            media={movie.media_type}
-                            open={open === movie.id}
-                            openUseState={open}
-                            onClick={() => handleOpen(movie.id)}
-                        />
-                    ))}
+                            <MovieCard
+                                key={movie.id}
+                                id={movie.id}
+                                name={movie.title ? movie.title : movie.name}
+                                year={movie.release_date ? movie.release_date : movie.first_air_date}
+                                image_url={movie.poster_path ? `https://image.tmdb.org/t/p/w500${movie.poster_path}` : "https://via.placeholder.com/500x750"}
+                                overview={movie.overview}
+                                media={movie.media_type}
+                                popularity={movie.popularity}
+                                open={open === movie.id}
+                                openUseState={open}
+                                onClick={() => handleOpen(movie.id)}
+                            />
+                        ))}
+                    </div>
+                </>
+            )}
+            {!loading && movieFilter === false && tvFilter === false && (
+                <div className="flex flex-col items-center justify-center w-full h-full text-center">
+                    <Typography
+                        variant="h1"
+                        color="gray"
+                        className="mb-4 text-3xl md:text-4xl lg:text-5xl"
+                    >
+                        No Results Found
+                    </Typography>
+                    <Typography
+                        variant="lead"
+                        color="gray"
+                        className="mb-12 opacity-80"
+                    >
+                        Please try again
+                    </Typography>
                 </div>
             )}
+            {loading && (
+                <div className="flex flex-col items-center justify-center w-full h-full text-center">
+                    <Spinner
+                        color="blue"
+                        size="xl"
+                        className="mt-10 mb-10"
+                    />
+                </div>
+            )}
+
         </div>
     );
 }
+

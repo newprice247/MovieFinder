@@ -5,9 +5,15 @@ import axios from 'axios';
 const search = {
     
      getMovieByTitle: async (title, page) => {
+        let finalResult = [];   
         try {
             const response = await axios.get(`/api/movies/${title}/${page}`);
-            return response.data;
+            for (let i = 0; i < response.data.total_pages; i++) {
+                const page = await axios.get(`/api/movies/${title}/${i + 1}`);
+                finalResult.push(page.data.results);
+            }
+            const result = finalResult.flat();
+            return result;
         } catch (error) {
             console.log(error);
             throw error;

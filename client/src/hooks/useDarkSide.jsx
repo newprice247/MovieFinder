@@ -8,11 +8,7 @@ export default function useDarkSide() {
         root.classList.remove(colorTheme);
         root.classList.add(theme);
         if (typeof localStorage !== "undefined") {
-            if (localStorage.theme === "dark") {
-                localStorage.removeItem("theme");
-            } else {
-                localStorage.setItem("theme", theme);
-            }
+            localStorage.setItem("theme", theme);
         }
     }, [theme, colorTheme]);
     return [colorTheme, setTheme];

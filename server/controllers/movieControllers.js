@@ -7,6 +7,7 @@ const { Movie } = require('../models');
 
 
 
+
 module.exports = {
     async searchTMDB(req, res) {
         const options = {
@@ -15,14 +16,14 @@ module.exports = {
             params: {query: req.params.title, include_adult: 'false', language: 'en-US', page: req.params.page},
             headers: {
               accept: 'application/json',
-              Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI2ZmM2NDZhNDk3ZDZhZTJiZjJkNGVmYmI5OWRhZGZmNiIsInN1YiI6IjY0ZDZlNzkxMDAxYmJkMDBhZGQyNTA3NyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.Ezuo68vrQBKvdon2ZM21TIRxbUfqc3YIFu3Im__67gU'
+              Authorization: `Bearer ${tmdbToken}`
             }
           };
           
           await axios
             .request(options)
             .then(function (response) {
-              console.log(response.data);
+              console.log(response.data.page);
               res.json(response.data);
             })
             .catch(function (error) {

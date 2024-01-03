@@ -1,85 +1,275 @@
-import React, { useState } from 'react'
-import { DarkModeSwitch } from 'react-toggle-dark-mode';
-import useDarkSide from '../hooks/useDarkSide.jsx';
-
-
-export default function Header() {
-    const [colorTheme, setColorTheme] = useDarkSide()
-    const [darkMode, setDarkMode] = useState(colorTheme === 'dark' ? true : false)
-
-    const toggleDarkMode = (checked) => {
-        setDarkMode(checked)
-        setColorTheme(checked ? 'dark' : 'light')
-    }
-
+import React from "react";
+import {
+  Navbar,
+  MobileNav,
+  Typography,
+  Button,
+  Menu,
+  MenuHandler,
+  MenuList,
+  MenuItem,
+  Avatar,
+  Card,
+  IconButton,
+} from "@material-tailwind/react";
+import {
+  CubeTransparentIcon,
+  UserCircleIcon,
+  CodeBracketSquareIcon,
+  Square3Stack3DIcon,
+  ChevronDownIcon,
+  Cog6ToothIcon,
+  InboxArrowDownIcon,
+  LifebuoyIcon,
+  PowerIcon,
+  RocketLaunchIcon,
+  Bars2Icon,
+} from "@heroicons/react/24/solid";
+ 
+// profile menu component
+const profileMenuItems = [
+  {
+    label: "My Profile",
+    icon: UserCircleIcon,
+  },
+  {
+    label: "Edit Profile",
+    icon: Cog6ToothIcon,
+  },
+  {
+    label: "Inbox",
+    icon: InboxArrowDownIcon,
+  },
+  {
+    label: "Help",
+    icon: LifebuoyIcon,
+  },
+  {
+    label: "Sign Out",
+    icon: PowerIcon,
+  },
+];
+ 
+function ProfileMenu() {
+  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+ 
+  const closeMenu = () => setIsMenuOpen(false);
+ 
   return (
-    <div className="fixed z-50 w-full h-16 max-w-lg -translate-x-1/2 bg-white border border-gray-200 rounded-full bottom-4 left-1/2 dark:bg-gray-700 dark:border-gray-600">
-      <div className="grid h-full max-w-lg grid-cols-5 mx-auto">
-        <button data-tooltip-target="tooltip-home" 
-        type="button" 
-        className="inline-flex flex-col items-center justify-center px-5 rounded-s-full hover:bg-gray-50 dark:hover:bg-gray-800 group"
-        onClick={() => window.location.reload()}
+    <Menu open={isMenuOpen} handler={setIsMenuOpen} placement="bottom-end">
+      <MenuHandler>
+        <Button
+          variant="text"
+          color="blue-gray"
+          className="flex items-center gap-1 rounded-full py-0.5 pr-2 pl-0.5 lg:ml-auto"
         >
-          <svg className="w-5 h-5 mb-1 text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-            <path d="m19.707 9.293-2-2-7-7a1 1 0 0 0-1.414 0l-7 7-2 2a1 1 0 0 0 1.414 1.414L2 10.414V18a2 2 0 0 0 2 2h3a1 1 0 0 0 1-1v-4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v4a1 1 0 0 0 1 1h3a2 2 0 0 0 2-2v-7.586l.293.293a1 1 0 0 0 1.414-1.414Z" />
-          </svg>
-          <span className="sr-only">Home</span>
-        </button>
-        <div id="tooltip-home" role="tooltip" className="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
-          Home
-          <div className="tooltip-arrow" data-popper-arrow></div>
-        </div>
-        <button data-tooltip-target="tooltip-wallet" 
-        type="button" 
-        className="inline-flex flex-col items-center justify-center px-5 hover:bg-gray-50 dark:hover:bg-gray-800 group"
-        
-        >
-          <svg className="w-5 h-5 mb-1 text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-            <path d="M11.074 4 8.442.408A.95.95 0 0 0 7.014.254L2.926 4h8.148ZM9 13v-1a4 4 0 0 1 4-4h6V6a1 1 0 0 0-1-1H1a1 1 0 0 0-1 1v13a1 1 0 0 0 1 1h17a1 1 0 0 0 1-1v-2h-6a4 4 0 0 1-4-4Z" />
-            <path d="M19 10h-6a2 2 0 0 0-2 2v1a2 2 0 0 0 2 2h6a1 1 0 0 0 1-1v-3a1 1 0 0 0-1-1Zm-4.5 3.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2ZM12.62 4h2.78L12.539.41a1.086 1.086 0 1 0-1.7 1.352L12.62 4Z" />
-          </svg>
-          <span className="sr-only">Wallet</span>
-        </button>
-        <div id="tooltip-wallet" role="tooltip" className="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
-          Wallet
-          <div className="tooltip-arrow" data-popper-arrow></div>
-        </div>
-        <button 
-        data-tooltip-target="tooltip-notifications" 
-        type="button" 
-        className="inline-flex flex-col items-center justify-center px-5 hover:bg-gray-50 dark:hover:bg-gray-800 group"
-        onClick={() => toggleDarkMode(!darkMode)}
-        >
-          <DarkModeSwitch
-            checked={darkMode}
-            onChange={toggleDarkMode}
-            size={20}
-            className="w-5 h-5 mb-1 text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500"
+          <Avatar
+            variant="circular"
+            size="sm"
+            alt="tania andrew"
+            className="border border-gray-900 p-0.5"
+            src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1480&q=80"
           />
-          <span className="sr-only">Toggle Dark Mode</span>
-        </button>
-        <button data-tooltip-target="tooltip-settings" type="button" className="inline-flex flex-col items-center justify-center px-5 hover:bg-gray-50 dark:hover:bg-gray-800 group">
-          <svg className="w-5 h-5 mb-1 text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 12.25V1m0 11.25a2.25 2.25 0 0 0 0 4.5m0-4.5a2.25 2.25 0 0 1 0 4.5M4 19v-2.25m6-13.5V1m0 2.25a2.25 2.25 0 0 0 0 4.5m0-4.5a2.25 2.25 0 0 1 0 4.5M10 19V7.75m6 4.5V1m0 11.25a2.25 2.25 0 1 0 0 4.5 2.25 2.25 0 0 0 0-4.5ZM16 19v-2" />
-          </svg>
-          <span className="sr-only">Settings</span>
-        </button>
-        <div id="tooltip-settings" role="tooltip" className="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
-          Settings
-          <div className="tooltip-arrow" data-popper-arrow></div>
+          <ChevronDownIcon
+            strokeWidth={2.5}
+            className={`h-3 w-3 transition-transform ${
+              isMenuOpen ? "rotate-180" : ""
+            }`}
+          />
+        </Button>
+      </MenuHandler>
+      <MenuList className="p-1">
+        {profileMenuItems.map(({ label, icon }, key) => {
+          const isLastItem = key === profileMenuItems.length - 1;
+          return (
+            <MenuItem
+              key={label}
+              onClick={closeMenu}
+              className={`flex items-center gap-2 rounded ${
+                isLastItem
+                  ? "hover:bg-red-500/10 focus:bg-red-500/10 active:bg-red-500/10"
+                  : ""
+              }`}
+            >
+              {React.createElement(icon, {
+                className: `h-4 w-4 ${isLastItem ? "text-red-500" : ""}`,
+                strokeWidth: 2,
+              })}
+              <Typography
+                as="span"
+                variant="small"
+                className="font-normal"
+                color={isLastItem ? "red" : "inherit"}
+              >
+                {label}
+              </Typography>
+            </MenuItem>
+          );
+        })}
+      </MenuList>
+    </Menu>
+  );
+}
+ 
+// nav list menu
+const navListMenuItems = [
+  {
+    title: "@material-tailwind/html",
+    description:
+      "Learn how to use @material-tailwind/html, packed with rich components and widgets.",
+  },
+  {
+    title: "@material-tailwind/react",
+    description:
+      "Learn how to use @material-tailwind/react, packed with rich components for React.",
+  },
+  {
+    title: "Material Tailwind PRO",
+    description:
+      "A complete set of UI Elements for building faster websites in less time.",
+  },
+];
+ 
+function NavListMenu() {
+  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+ 
+  const renderItems = navListMenuItems.map(({ title, description }) => (
+    <a href="#" key={title}>
+      <MenuItem>
+        <Typography variant="h6" color="blue-gray" className="mb-1">
+          {title}
+        </Typography>
+        <Typography variant="small" color="gray" className="font-normal">
+          {description}
+        </Typography>
+      </MenuItem>
+    </a>
+  ));
+ 
+  return (
+    <React.Fragment>
+      <Menu allowHover open={isMenuOpen} handler={setIsMenuOpen}>
+        <MenuHandler>
+          <Typography as="a" href="#" variant="small" className="font-normal">
+            <MenuItem className="hidden items-center gap-2 font-medium text-blue-gray-900 lg:flex lg:rounded-full">
+              <Square3Stack3DIcon className="h-[18px] w-[18px] text-blue-gray-500" />{" "}
+              Pages{" "}
+              <ChevronDownIcon
+                strokeWidth={2}
+                className={`h-3 w-3 transition-transform ${
+                  isMenuOpen ? "rotate-180" : ""
+                }`}
+              />
+            </MenuItem>
+          </Typography>
+        </MenuHandler>
+        <MenuList className="hidden w-[36rem] grid-cols-7 gap-3 overflow-visible lg:grid">
+          <Card
+            color="blue"
+            shadow={false}
+            variant="gradient"
+            className="col-span-3 grid h-full w-full place-items-center rounded-md"
+          >
+            <RocketLaunchIcon strokeWidth={1} className="h-28 w-28" />
+          </Card>
+          <ul className="col-span-4 flex w-full flex-col gap-1">
+            {renderItems}
+          </ul>
+        </MenuList>
+      </Menu>
+      <MenuItem className="flex items-center gap-2 font-medium text-blue-gray-900 lg:hidden">
+        <Square3Stack3DIcon className="h-[18px] w-[18px] text-blue-gray-500" />{" "}
+        Pages{" "}
+      </MenuItem>
+      <ul className="ml-6 flex w-full flex-col gap-1 lg:hidden">
+        {renderItems}
+      </ul>
+    </React.Fragment>
+  );
+}
+ 
+// nav list component
+const navListItems = [
+  {
+    label: "Account",
+    icon: UserCircleIcon,
+  },
+  {
+    label: "Blocks",
+    icon: CubeTransparentIcon,
+  },
+  {
+    label: "Docs",
+    icon: CodeBracketSquareIcon,
+  },
+];
+ 
+function NavList() {
+  return (
+    <ul className="mt-2 mb-4 flex flex-col gap-2 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center">
+      <NavListMenu />
+      {navListItems.map(({ label, icon }, key) => (
+        <Typography
+          key={label}
+          as="a"
+          href="#"
+          variant="small"
+          color="gray"
+          className="font-medium text-blue-gray-500"
+        >
+          <MenuItem className="flex items-center gap-2 lg:rounded-full">
+            {React.createElement(icon, { className: "h-[18px] w-[18px]" })}{" "}
+            <span className="text-gray-900"> {label}</span>
+          </MenuItem>
+        </Typography>
+      ))}
+    </ul>
+  );
+}
+ 
+export default function ComplexNavbar() {
+  const [isNavOpen, setIsNavOpen] = React.useState(false);
+ 
+  const toggleIsNavOpen = () => setIsNavOpen((cur) => !cur);
+ 
+  React.useEffect(() => {
+    window.addEventListener(
+      "resize",
+      () => window.innerWidth >= 960 && setIsNavOpen(false),
+    );
+  }, []);
+ 
+  return (
+    <Navbar className="mx-auto max-w-screen-xl p-2 lg:rounded-full lg:pl-6">
+      <div className="relative mx-auto flex items-center justify-between text-blue-gray-900">
+        <Typography
+          as="a"
+          href="#"
+          className="mr-4 ml-2 cursor-pointer py-1.5 font-medium"
+        >
+          Material Tailwind
+        </Typography>
+        <div className="hidden lg:block">
+          <NavList />
         </div>
-        <button data-tooltip-target="tooltip-profile" type="button" className="inline-flex flex-col items-center justify-center px-5 rounded-e-full hover:bg-gray-50 dark:hover:bg-gray-800 group">
-          <svg className="w-5 h-5 mb-1 text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-            <path d="M10 0a10 10 0 1 0 10 10A10.011 10.011 0 0 0 10 0Zm0 5a3 3 0 1 1 0 6 3 3 0 0 1 0-6Zm0 13a8.949 8.949 0 0 1-4.951-1.488A3.987 3.987 0 0 1 9 13h2a3.987 3.987 0 0 1 3.951 3.512A8.949 8.949 0 0 1 10 18Z" />
-          </svg>
-          <span className="sr-only">Profile</span>
-        </button>
-        <div id="tooltip-profile" role="tooltip" className="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
-          Profile
-          <div className="tooltip-arrow" data-popper-arrow></div>
-        </div>
+        <IconButton
+          size="sm"
+          color="blue-gray"
+          variant="text"
+          onClick={toggleIsNavOpen}
+          className="ml-auto mr-2 lg:hidden"
+        >
+          <Bars2Icon className="h-6 w-6" />
+        </IconButton>
+ 
+        <Button size="sm" variant="text">
+          <span>Log In</span>
+        </Button>
+        <ProfileMenu />
       </div>
-    </div>
-
-  )
+      <MobileNav open={isNavOpen} className="overflow-scroll">
+        <NavList />
+      </MobileNav>
+    </Navbar>
+  );
 }
