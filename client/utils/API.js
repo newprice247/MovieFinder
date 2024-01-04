@@ -3,9 +3,9 @@ import axios from 'axios';
 
 
 const search = {
-    
-     getMovieByTitle: async (title, page) => {
-        let finalResult = [];   
+
+    getMovieByTitle: async (title, page) => {
+        let finalResult = [];
         try {
             const response = await axios.get(`/api/movies/${title}/${page}`);
             for (let i = 0; i < response.data.total_pages; i++) {
@@ -19,16 +19,35 @@ const search = {
             throw error;
         }
     },
+    getMovieDetails: async (mediaType, id) => {
+        try {
+            const response = await axios.get(`/api/movies/details/${id}/${mediaType}`);
+            return response.data;
+        } catch (error) {
+            console.log(error);
+            throw error;
+        }
+    },
+    getMovieRatings: async (id) => {
+        try {
+            const response = await axios.get(`/api/ratings/${id}`);
+            return response.data;
+        } catch (error) {
+            console.log(error);
+            throw error;
+        }
+    },
     getMoviesTest: async () => {
         try {
             const movies = await axios.get('/api/test');
             console.log(movies.data);
             return movies.data
-    } catch (error) {
-        console.log(error);
-        throw error;
-    }
-}
+        } catch (error) {
+            console.log(error);
+            throw error;
+        }
+    },
+
 };
 
 export default search;

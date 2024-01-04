@@ -5,13 +5,17 @@ import Pagination from "../components/modules/Pagination";
 import search from "../../utils/API";
 import { Checkbox } from "@material-tailwind/react";
 import SearchBar from "../components/modules/SearchBar";
+import ResultsPage from "./ResultsPage";
 
 import { Carousel, Typography, Button, Icon } from "@material-tailwind/react";
+
 
 export default function CarouselWithContent() {
     const [searchTerm, setSearchTerm] = useState('')
     const [searchResults, setSearchResults] = useState(null)
     let [filteredResults, setFilteredResults] = useState([])
+    let [currentWatchMode, setCurrentWatchMode] = useState(null)
+    let [currentOMDB, setCurrentOMDB] = useState(null)
     const [open, setOpen] = React.useState("")
     // const [totalPages, setTotalPages] = useState(0)
     // const [active, setActive] = React.useState(1);
@@ -36,11 +40,6 @@ export default function CarouselWithContent() {
     //     scrollToTop();
     // };
 
-
-
-    const handleOpen = (value) => {
-        setOpen(open === value ? 0 : value);
-    }
 
     const scrollToTop = () => {
         window.scrollTo({
@@ -73,14 +72,6 @@ export default function CarouselWithContent() {
                 }
             }
             finalSearchResults.map((movie) => {
-                if (movie.media_type === "movie") {
-                    movie.media_type = "Movie"
-                }
-                if (movie.media_type === "tv") {
-                    movie.media_type = "TV Show"
-                }
-            })
-            finalSearchResults.map((movie) => {
                 if (movie.release_date) {
                     movie.release_date = movie.release_date.substring(0, 4)
                 }
@@ -108,6 +99,27 @@ export default function CarouselWithContent() {
         }
     }
 
+    const showResultsPage = async (mediaType, id) => {
+        let finalSearchResults = []
+        let imdb_id = ""
+        console.log(id)
+        try {
+            const response = await search.getMovieDetails(mediaType, id)
+            imdb_id = response.imdb_id
+            const ratings = await search.getMovieRatings(imdb_id)
+
+            console.log(ratings)
+            console
+            setSearchResults(null)
+            setFilteredResults([])
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+
+
+
 
     useEffect(() => {
         if (searchResults) {
@@ -129,7 +141,7 @@ export default function CarouselWithContent() {
         <div
             className="flex flex-col items-center justify-center w-full h-full text-center"
         >
-            {!loading && !searchResults && (
+            {!loading && !searchResults && currentMovieDetails === null && (
                 <Carousel className="rounded-xl">
                     <div className="relative h-[75vh] lg:h-[100vh] w-full rounded-lg">
                         <div className="absolute inset-0 bg-black/50 rounded-xl" />
@@ -230,7 +242,10 @@ export default function CarouselWithContent() {
                                 popularity={movie.popularity}
                                 open={open === movie.id}
                                 openUseState={open}
-                                onClick={() => handleOpen(movie.id)}
+                                onClick={(e) => {
+                                    e.preventDefault()
+                                    showResultsPage(movie.media_type, movie.id)
+                                }}
                             />
                         ))}
                     </div>
@@ -262,6 +277,14 @@ export default function CarouselWithContent() {
                         className="mt-10 mb-10"
                     />
                 </div>
+            )}
+            {currentMovieDetails && (
+                <ResultsPage
+                    movieDetails={currentMovieDetails}
+                    onClick={() => {
+                        setCurrentMovieDetails(null)
+                    }}
+                />
             )}
 
         </div>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { DarkModeSwitch } from 'react-toggle-dark-mode';
 import useDarkSide from '../hooks/useDarkSide.jsx';
 
@@ -6,6 +6,7 @@ import useDarkSide from '../hooks/useDarkSide.jsx';
 export default function Header() {
     const [colorTheme, setColorTheme] = useDarkSide()
     const [darkMode, setDarkMode] = useState(colorTheme === 'dark' ? true : false)
+    const [initialLoad, setInitialLoad] = useState(false)
 
     const toggleDarkMode = (checked) => {
       

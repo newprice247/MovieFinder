@@ -1,29 +1,15 @@
-// import React, { useState, useEffect } from 'react'
-// import MovieCard from '../components/modules/MovieCard'
-// import search from '../../utils/API'
+import React, { useEffect, useState } from 'react'
 
-// export default function ResultsPage() {
-//     const [searchTerm, setSearchTerm] = useState('')
-//     const [searchResults, setSearchResults] = useState([])
+export default function ResultsPage(props) {
 
-//     useEffect(() => {
-//         const results = search(searchTerm)
-//         setSearchResults(results)
-//     }, [searchTerm])
-
-
-//     return (
-//         <div>
-//             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-//                 {searchResults.map((movie) => (
-//                     <MovieCard
-//                         key={movie.id}
-//                         title={movie.name}
-//                         releaseDate={movie.year}
-//                         image={movie.image_url}
-//                     />
-//                 ))}
-//             </div>
-//         </div>
-//     )
-// }
+    return (
+        <div
+        className='flex flex-col items-center justify-center w-full h-screen bg-white dark:bg-gray-800'
+        >
+            <h1>Results Page</h1>
+            <p>Title: {props.title}</p>
+            <p>Year: {props.year}</p>
+            
+        </div>
+    )
+}
