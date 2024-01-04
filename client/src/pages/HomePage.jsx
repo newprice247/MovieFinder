@@ -285,6 +285,21 @@ export default function CarouselWithContent() {
                 <ResultsPage
                     title={currentWatchMode.title ? currentWatchMode.title : currentWatchMode.name}
                     year={currentOMDB.Year}
+                    poster={currentOMDB.Poster}
+                    rated={currentOMDB.Rated}
+                    released={currentOMDB.Released}
+                    runtime={currentOMDB.Runtime}
+                    genre={currentOMDB.Genre}
+                    director={currentOMDB.Director}
+                    writer={currentOMDB.Writer}
+                    actors={currentOMDB.Actors}
+                    plot={currentOMDB.Plot}
+                    language={currentOMDB.Language}
+                    country={currentOMDB.Country}
+                    awards={currentOMDB.Awards}
+                    // ratings={currentOMDB.Ratings.map
+
+                    boxOffice={currentOMDB.BoxOffice}
 
                 />
             )}
