@@ -100,20 +100,23 @@ export default function CarouselWithContent() {
     }
 
     const showResultsPage = async (mediaType, id) => {
-        let finalSearchResults = []
+        
         let imdb_id = ""
         console.log(id)
         try {
             const response = await search.getMovieDetails(mediaType, id)
             imdb_id = response.imdb_id
             const ratings = await search.getMovieRatings(imdb_id)
+            setCurrentOMDB(ratings)
+            setCurrentWatchMode(response)
 
-            console.log(ratings)
-            console
             setSearchResults(null)
             setFilteredResults([])
         } catch (error) {
             console.log(error)
+        } finally {
+            console.log(currentWatchMode)
+            console.log(currentOMDB)
         }
     }
 
@@ -141,7 +144,7 @@ export default function CarouselWithContent() {
         <div
             className="flex flex-col items-center justify-center w-full h-full text-center"
         >
-            {!loading && !searchResults && currentMovieDetails === null && (
+            {!loading && !searchResults && currentOMDB === null && (
                 <Carousel className="rounded-xl">
                     <div className="relative h-[75vh] lg:h-[100vh] w-full rounded-lg">
                         <div className="absolute inset-0 bg-black/50 rounded-xl" />
@@ -278,12 +281,11 @@ export default function CarouselWithContent() {
                     />
                 </div>
             )}
-            {currentMovieDetails && (
+            {currentWatchMode && currentOMDB && (
                 <ResultsPage
-                    movieDetails={currentMovieDetails}
-                    onClick={() => {
-                        setCurrentMovieDetails(null)
-                    }}
+                    title={currentWatchMode.title ? currentWatchMode.title : currentWatchMode.name}
+                    year={currentOMDB.Year}
+
                 />
             )}
 
